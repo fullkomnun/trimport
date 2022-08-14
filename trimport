@@ -8,7 +8,7 @@ set -u
 
 compile(){
   echo Compiling...
-  truffle compile >/dev/null 2>&1
+  npx hardhat compile >/dev/null 2>&1
 }
 
 echo "This script will run on the following files:"
@@ -28,11 +28,19 @@ tmp="$(mktemp)"
 
 find 'contracts' -type f -iname '*.sol' |\
 while read -r f ; do
+  removed=0
   grep -n '^ *import' "$f" | cut -d':' -f1 |\
     while read -r line; do
       cp "$f" "$tmp"
-      sed -i "$line"'s/.*//' "$f"
-      compile || cp "$tmp" "$f"
+      line_num=$((line-removed))
+      sed -i '' "${line_num}d" "$f"
+      removed=$((removed+1))
+      if ! compile; then
+        echo "reverting"
+        cp "$tmp" "$f"
+        removed=$((removed-1))
+      fi
+      
     done
 done
 
