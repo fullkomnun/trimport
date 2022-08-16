@@ -3,6 +3,8 @@
 # project can still be compiled, so that the minimum number of imports is used.
 # This approach is really inefficient, but good enough given that it can just
 # be run once in a while to unclutter imports.
+# Origin: https://github.com/ChainSecurity/trimport/blob/master/trimport
+# Updated Fork: https://github.com/fullkomnun/trimport/blob/master/trimport
 set -e
 set -u
 
